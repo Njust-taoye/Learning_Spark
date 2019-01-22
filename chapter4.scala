@@ -31,6 +31,7 @@ val result = input.combineByKey(
     //在不同分区上进行,将不同分区上相同key的value相加
     (acc1: (Int, Int), acc2: (Int, Int)) => (acc1._1+acc2._1, acc1._2+acc2._2)
   ).map{ case (key, value) => (key, value._1 /value._2.toFloat)}
+result.collectAsMap().map(println(_))//将结果以映射的形式返回，以便查询
 
 /**************自定义reduceByKey() 并行度*******************/
 val data = Seq(("a", 3), ("b", 4), ("a", 1))
@@ -58,6 +59,14 @@ val RightJoinRes = rdd1.rightOuterJoin(rdd2).collect.foreach(println)//右外连
 //(5,(None,10k))
 //(2,(Some(Hadoop),15k))
 //(3,(Some(Scala),25k))
+
+/*******************以字符串对整数进行自定义排序***********************/
+val rdd = sc.parallelize(List((1, "Spark"), (2, "Hadoop"), (3, "Scala"), (4, "Java")))
+implicit val sortIntegerByString = new Ordering[Int]{
+  override def compare(a: Int, b: Int) = a.toString.compare(b.toString)
+}
+rdd.sortByKey()
+
 
 
 
