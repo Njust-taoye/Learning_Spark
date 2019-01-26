@@ -25,7 +25,8 @@ object BasicParseWholeFileCsv{
     val inputFile = "inputFile.csv"
     val outputFile = "res"
     val sc = new SparkContext(master, "BasicParseWholeFileCsv")
-    val input = sc.wholeTextFiles(inputFile)//当文件足够小时，可以使用SparkContext.wholeTextFiles(),该方法会返回一个pair RDD,其中键为输入文件名。
+    val input = sc.wholeTextFiles(inputFile)//当文件足够小时，可以使用SparkContext.wholeTextFiles()读取整个文件,
+   //该方法会返回一个pair RDD,其中键为输入文件名。
     val result = input.flatMap{ case (_, txt) => 
         val reader = new CSVReader(new StringReader(txt));
         reader.readAll()
